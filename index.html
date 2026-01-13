@@ -2031,7 +2031,7 @@ function updateGoalDisplay() {
 
 function checkGoalAchievement(finalScore) {
   if (!goalData || goalData.targetScore <= 0) return null;
-  return finalScore > goalData.targetScore;
+  return finalScore >= goalData.targetScore;
 }
 
 // 라운드별 배경색 변경
