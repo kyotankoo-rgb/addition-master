@@ -124,6 +124,9 @@
     .btn-practice { background: linear-gradient(135deg, #10b981, #34d399); padding: 12px 40px; border-radius: 50px; font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 15px; box-shadow: 0 0 20px rgba(16,185,129,0.4); }
     .btn-quit { background: rgba(239,68,68,0.2); border: 2px solid #ef4444 !important; padding: 10px 24px; border-radius: 50px; font-size: 14px; color: #ef4444; margin-top: 20px; }
     .btn-how { background: transparent; border: 2px solid #555 !important; padding: 10px 20px; border-radius: 50px; font-size: 13px; color: #888; }
+    .btn-more-games { background: transparent; border: 2px solid #3b82f6 !important; padding: 10px 25px; border-radius: 50px; font-size: 14px; color: #3b82f6; }
+    .more-games-section { margin-top: 25px; padding-top: 20px; border-top: 1px solid #333; text-align: center; }
+    .more-games-title { color: #888; font-size: 13px; margin-bottom: 12px; }
     .btn-rank { background: linear-gradient(135deg, #f59e0b, #fbbf24); padding: 12px 40px; border-radius: 50px; font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 15px; box-shadow: 0 0 20px rgba(245,158,11,0.4); }
     .bottom-buttons { display: flex; gap: 10px; justify-content: center; margin-top: 10px; }
     
@@ -482,11 +485,17 @@
   </div>
   
   <div id="resultMsg" class="result-msg"></div>
-  <div>
+  <div style="display: flex; justify-content: center;">
     <button id="btnRetry" class="btn-retry" onclick="restartGame()">다시 하기</button>
     <button id="btnRankResult" class="btn-board" onclick="showLeaderboard()"><img src="icon-record.png" class="icon"> 랭킹</button>
   </div>
   <button id="btnHomeResult" class="btn-home" onclick="showScreen('title')"><img src="icon-home.png" class="icon"> 홈으로</button>
+
+  <!-- 다른 게임 추천 (성공시에만 표시) -->
+  <div id="moreGamesSection" class="more-games-section hidden">
+    <div id="moreGamesTitle" class="more-games-title">다른 게임도 해보세요!</div>
+    <button id="btnMoreGames" class="btn-more-games" onclick="openMoreGames()">🎮 다른 게임 보기</button>
+  </div>
 </div>
 
 <!-- 리더보드 -->
@@ -522,7 +531,7 @@ async function vibrate() {
 }
 
 // ===== AdMob 광고 =====
-const ADMOB_INTERSTITIAL_ID = 'ca-app-pub-3940256099942544/1033173712';
+const ADMOB_INTERSTITIAL_ID = 'ca-app-pub-5768163352214291/7817782748';
 let adLoaded = false;
 let adCallback = null;
 
@@ -746,6 +755,8 @@ const LANG = {
     pts: '점',
     start: '게임 시작',
     howTo: '게임 방법',
+    moreGames: '다른 게임 보기',
+    moreGamesTitle: '다른 게임도 해보세요!',
     ranking: '랭킹 보기',
     goal: '<img src="icon-reward.png" class="icon"> 목표 설정',
     enterName: '이름을 입력하세요',
@@ -816,6 +827,8 @@ const LANG = {
     pts: 'pts',
     start: 'Start Game',
     howTo: 'How to Play',
+    moreGames: 'More Games',
+    moreGamesTitle: 'Try our other games!',
     ranking: 'Ranking',
     goal: '<img src="icon-reward.png" class="icon"> Set Goal',
     enterName: 'Enter your name',
@@ -886,6 +899,8 @@ const LANG = {
     pts: '分',
     start: '开始游戏',
     howTo: '游戏规则',
+    moreGames: '更多游戏',
+    moreGamesTitle: '试试我们的其他游戏！',
     ranking: '排行榜',
     goal: '<img src="icon-reward.png" class="icon"> 设定目标',
     enterName: '请输入名字',
@@ -956,6 +971,8 @@ const LANG = {
     pts: '点',
     start: 'ゲーム開始',
     howTo: '遊び方',
+    moreGames: '他のゲーム',
+    moreGamesTitle: '他のゲームも遊んでみてね！',
     ranking: 'ランキング',
     goal: '<img src="icon-reward.png" class="icon"> 目標設定',
     enterName: '名前を入力',
@@ -1026,6 +1043,8 @@ const LANG = {
     pts: 'đ',
     start: 'Bắt đầu',
     howTo: 'Hướng dẫn',
+    moreGames: 'Game khác',
+    moreGamesTitle: 'Hãy thử các game khác của chúng tôi!',
     ranking: 'Xếp hạng',
     goal: '<img src="icon-reward.png" class="icon"> Đặt mục tiêu',
     enterName: 'Nhập tên của bạn',
@@ -1096,6 +1115,8 @@ const LANG = {
     pts: 'pts',
     start: 'Iniciar Juego',
     howTo: 'Cómo Jugar',
+    moreGames: 'Más Juegos',
+    moreGamesTitle: '¡Prueba nuestros otros juegos!',
     ranking: 'Ranking',
     goal: '<img src="icon-reward.png" class="icon"> Meta',
     enterName: 'Ingresa tu nombre',
@@ -1166,6 +1187,8 @@ const LANG = {
     pts: 'pts',
     start: 'Commencer',
     howTo: 'Comment Jouer',
+    moreGames: 'Plus de Jeux',
+    moreGamesTitle: 'Essayez nos autres jeux !',
     ranking: 'Classement',
     goal: '<img src="icon-reward.png" class="icon"> Objectif',
     enterName: 'Entrez votre nom',
@@ -1236,6 +1259,8 @@ const LANG = {
     pts: 'Pkt',
     start: 'Spiel Starten',
     howTo: 'Anleitung',
+    moreGames: 'Mehr Spiele',
+    moreGamesTitle: 'Probiere unsere anderen Spiele!',
     ranking: 'Rangliste',
     goal: '<img src="icon-reward.png" class="icon"> Ziel setzen',
     enterName: 'Name eingeben',
@@ -1306,6 +1331,8 @@ const LANG = {
     pts: 'poin',
     start: 'Mulai',
     howTo: 'Cara Bermain',
+    moreGames: 'Game Lainnya',
+    moreGamesTitle: 'Coba game lainnya dari kami!',
     ranking: 'Peringkat',
     goal: '<img src="icon-reward.png" class="icon"> Atur Target',
     enterName: 'Masukkan nama',
@@ -1390,6 +1417,8 @@ const LANG = {
     retry: 'Jogar Novamente',
     noRecords: 'Sem registros ainda',
     howTo: 'Como Jogar',
+    moreGames: 'Mais Jogos',
+    moreGamesTitle: 'Experimente nossos outros jogos!',
     close: 'Fechar',
     goal: '<img src="icon-reward.png" class="icon"> Meta',
     goalSetting: '<img src="icon-reward.png" class="icon"> Meta',
@@ -1469,6 +1498,8 @@ const LANG = {
     retry: 'Ещё раз',
     noRecords: 'Записей пока нет',
     howTo: 'Как играть',
+    moreGames: 'Другие игры',
+    moreGamesTitle: 'Попробуйте наши другие игры!',
     close: 'Закрыть',
     goal: '<img src="icon-reward.png" class="icon"> Цель',
     goalSetting: '<img src="icon-reward.png" class="icon"> Цель',
@@ -1548,6 +1579,8 @@ const LANG = {
     retry: 'เล่นอีก',
     noRecords: 'ยังไม่มีสถิติ',
     howTo: 'วิธีเล่น',
+    moreGames: 'เกมอื่นๆ',
+    moreGamesTitle: 'ลองเล่นเกมอื่นของเรา!',
     close: 'ปิด',
     goal: '<img src="icon-reward.png" class="icon"> ตั้งเป้าหมาย',
     goalSetting: '<img src="icon-reward.png" class="icon"> เป้าหมาย',
@@ -1627,6 +1660,8 @@ const LANG = {
     retry: 'Tekrar Oyna',
     noRecords: 'Henüz kayıt yok',
     howTo: 'Nasıl Oynanır',
+    moreGames: 'Diğer Oyunlar',
+    moreGamesTitle: 'Diğer oyunlarımızı deneyin!',
     close: 'Kapat',
     goal: '<img src="icon-reward.png" class="icon"> Hedef Belirle',
     goalSetting: '<img src="icon-reward.png" class="icon"> Hedef',
@@ -1941,6 +1976,7 @@ function showScreen(name) {
 
 function showHowToPlay() { document.getElementById('modal-how').classList.remove('hidden'); }
 function closeHowToPlay() { document.getElementById('modal-how').classList.add('hidden'); }
+function openMoreGames() { window.open('https://play.google.com/store/apps/dev?id=8025424579913641698', '_system'); }
 
 // ===== 목표 설정 =====
 function showGoalModal() {
@@ -2607,6 +2643,16 @@ function endGame(won) {
     else msg = L.msg4;
   }
   document.getElementById('resultMsg').innerHTML = msg;
+
+  // 다른 게임 추천 (성공시에만 표시)
+  const moreGamesSection = document.getElementById('moreGamesSection');
+  if (won && !isPracticeMode) {
+    moreGamesSection.classList.remove('hidden');
+    document.getElementById('moreGamesTitle').textContent = L.moreGamesTitle;
+    document.getElementById('btnMoreGames').innerHTML = '🎮 ' + L.moreGames;
+  } else {
+    moreGamesSection.classList.add('hidden');
+  }
 
   showScreen('result');
 }
