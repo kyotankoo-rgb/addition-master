@@ -539,7 +539,7 @@ async function initAdMob() {
   try {
     if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob) {
       const AdMob = window.Capacitor.Plugins.AdMob;
-      await AdMob.initialize({ testingDevices: [], initializeForTesting: true });
+      await AdMob.initialize({ testingDevices: [], initializeForTesting: false });
 
       // 광고 닫힘 이벤트 리스너
       AdMob.addListener('interstitialAdDismissed', () => {
